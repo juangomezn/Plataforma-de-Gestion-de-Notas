@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import cors from "cors"
 import express from 'express'
 import mongoose from 'mongoose'
 import passport from 'passport'
@@ -15,6 +16,8 @@ const app = express()
 
 main()
 
+app.use(cors())
+app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -32,6 +35,10 @@ mongoose.connect(MONGO_URL).then(() => console.log('✅ Database connected'))
 app.get('/', (req, res) => {
     res.send('Run Server')
 })
+
+app.use(cors())
+
+app.use(express.json())
 
 app.use('/auth', authRouter)
 app.use('/profile', profileRoute)

@@ -3,23 +3,25 @@ import passport from 'passport'
 
 const router = express.Router()
 
-// Ruta para redirigir a Google
+// Redirige a Google
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
-// Callback de Google
+// Callback después de Google
 router.get('/google/callback',
-    passport.authenticate('google', {
-        failureRedirect: '/login',
-        session: true
-    }),
+    passport.authenticate('google', { failureRedirect: '/auth/failure' }),
     (req, res) => {
-        // Redirige al frontend para completar el perfil
-        res.send('Autenticado correctamente con Google 🎉')
+        if (!req.user || !req.user._id) {
+            return res.redirect('/auth/failure')
+        }
+
+        const userId = req.user._id.toString()
+        // ✅ Redirigir al frontend con el ID
+        res.redirect(`http://localhost:5173/complete-profile?userId=${userId}`)
     }
 )
 
-router.get('/failure', (req, res) => {
-    res.send('Error de autenticación')
+router.get('/auth/failure', (req, res) => {
+    res.send('Error de autenticación con Google')
 })
 
 export default router

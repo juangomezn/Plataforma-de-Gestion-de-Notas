@@ -1,5 +1,5 @@
 .welcome-container {
-    min-height: calc(100vh - 100px); /* Correcto */
+    min-height: calc(100vh - 100px);
     overflow-x: hidden;
     padding: 40px 20px;;
     background-color: #111;

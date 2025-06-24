@@ -2,8 +2,15 @@ import { useState } from 'react'
 import './CompleteProfile.css'
 import Navbar from '../components/Navbar'
 
+const ROLES = {
+    admin: '685741f6742f783de332f842',
+    teacher: '68589a9fc21e9559fadca98b',
+    student: '68589aa8c21e9559fadca98d'
+}
+
 const CompleteProfile = () => {
     const [formData, setFormData] = useState({
+        email:'',
         rol: '',
         firstName: '',
         lastName: '',
@@ -21,37 +28,72 @@ const CompleteProfile = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
-    const handleCityChange = e => {
-        const [code, name] = e.target.value.split('|')
-        setFormData({ ...formData, cityCode: code, cityName: name })
-    }
-
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault()
-        console.log('Datos enviados:', formData)
+
+        const userData = {
+            rol: formData.rol,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            identification: {
+                type: formData.identificationType,
+                number: formData.identificationNumber
+            },
+            gender: formData.gender,
+            birthdate: formData.birthdate,
+            address: {
+                street: formData.addressStreet,
+                number: formData.addressNumber
+            },
+            city: {
+                code: formData.cityCode,
+                name: formData.cityName
+            }
+        }
+
+        try {
+
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('userId');
+
+            const response = await fetch(`http://localhost:3000/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            })
+
+            const result = await response.json()
+            if (response.ok) {
+                alert('✅ Usuario registrado correctamente')
+            } else {
+                alert('❌ Error: ' + result.details)
+            }
+        } catch (error) {
+            console.error('Error de conexión:', error)
+            alert('Error al conectar con el servidor')
+        }
     }
 
     return (
         <div>
             <Navbar />
-
             <div className="container">
                 <div className="form-wrapper">
                     <h2>Completa tu perfil</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-row">
                             <label>Rol:</label>
-                            <select name="rol" value={formData.gender} onChange={handleChange} required>
+                            <select name="rol" value={formData.rol} onChange={handleChange} required>
                                 <option value="">Selecciona...</option>
-                                <option value="Male">Administrador</option>
-                                <option value="Female">Profesor</option>
-                                <option value="Other">Estudiante</option>
+                                <option value={ROLES.admin}>Administrador</option>
+                                <option value={ROLES.teacher}>Profesor</option>
+                                <option value={ROLES.student}>Estudiante</option>
                             </select>
                         </div>
 
                         <div className="form-row">
                             <label>Nombre:</label>
-                            <input type="text" name="firstName" placeholder='Ingresa tu Nombre' className='colorplaceholder' value={formData.firstName} onChange={handleChange} required />
+                            <input type="text" name="firstName" placeholder='Ingresa tu Nombre' value={formData.firstName} onChange={handleChange} required />
                         </div>
 
                         <div className="form-row">
@@ -63,7 +105,7 @@ const CompleteProfile = () => {
                             <label>Tipo de Identificación:</label>
                             <select name="identificationType" value={formData.identificationType} onChange={handleChange} required>
                                 <option value="">Selecciona...</option>
-                                <option value="CC">Cédula de Ciudadania</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
                                 <option value="TI">Tarjeta de Identidad</option>
                                 <option value="CE">Cédula de Extranjería</option>
                             </select>
@@ -71,7 +113,7 @@ const CompleteProfile = () => {
 
                         <div className="form-row">
                             <label>Número de Identificación:</label>
-                            <input type="text" name="identificationNumber" placeholder='Ingresa tu Numero de Identificación' value={formData.identificationNumber} onChange={handleChange} required />
+                            <input type="text" name="identificationNumber" placeholder='Número de Identificación' value={formData.identificationNumber} onChange={handleChange} required />
                         </div>
 
                         <div className="form-row">
@@ -89,57 +131,30 @@ const CompleteProfile = () => {
                             <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} required />
                         </div>
 
-                        <h3>Direccion</h3>
+                        <h3>Dirección</h3>
 
                         <div className="form-row">
                             <label>Calle:</label>
-                            <input type="text" name="addressStreet" placeholder='Ingresa la calle de tu direccion' value={formData.addressStreet} onChange={handleChange} required />
+                            <input type="text" name="addressStreet" placeholder='Calle' value={formData.addressStreet} onChange={handleChange} required />
                         </div>
 
                         <div className="form-row">
-                            <label>Numero:</label>
-                            <input type="text" name="addressNumber" placeholder='Ingresa la numero de tu direccion' value={formData.addressStreet} onChange={handleChange} required />
+                            <label>Número:</label>
+                            <input type="text" name="addressNumber" placeholder='Número' value={formData.addressNumber} onChange={handleChange} required />
                         </div>
 
                         <h3>Ciudad</h3>
 
                         <div className="form-row">
-                            <label>Ciudad:</label>
-                            <select name="city" onChange={handleCityChange} required>
-                                <option value="">Selecciona una ciudad...</option>
-                                <option value="APA01|Apartadó">Apartadó - APA01</option>
-                                <option value="ARM01|Armenia">Armenia - ARM01</option>
-                                <option value="BAR01|Barranquilla">Barranquilla - BAR01</option>
-                                <option value="BOG01|Bogotá">Bogotá - BOG01</option>
-                                <option value="BGA01|Bucaramanga">Bucaramanga - BGA01</option>
-                                <option value="CAL01|Cali">Cali - CAL01</option>
-                                <option value="CAR01|Cartagena">Cartagena - CAR01</option>
-                                <option value="CUC01|Cúcuta">Cúcuta - CUC01</option>
-                                <option value="FLR01|Florencia">Florencia - FLR01</option>
-                                <option value="IBE01|Ibagué">Ibagué - IBE01</option>
-                                <option value="INR01|Inírida">Inírida - INR01</option>
-                                <option value="LET01|Leticia">Leticia - LET01</option>
-                                <option value="MAN01|Manizales">Manizales - MAN01</option>
-                                <option value="MED01|Medellín">Medellín - MED01</option>
-                                <option value="MIT01|Mitú">Mitú - MIT01</option>
-                                <option value="MOX01|Mocoa">Mocoa - MOX01</option>
-                                <option value="MON01|Montería">Montería - MON01</option>
-                                <option value="NVA01|Neiva">Neiva - NVA01</option>
-                                <option value="POP01|Popayán">Popayán - POP01</option>
-                                <option value="PST01|Pasto">Pasto - PST01</option>
-                                <option value="PTO01|Puerto Carreño">Puerto Carreño - PTO01</option>
-                                <option value="QUI01|Quibdó">Quibdó - QUI01</option>
-                                <option value="RIO01|Riohacha">Riohacha - RIO01</option>
-                                <option value="SMA01|Santa Marta">Santa Marta - SMA01</option>
-                                <option value="SNT01|San Andrés">San Andrés - SNT01</option>
-                                <option value="SJN01|San José del Guaviare">San José del Guaviare - SJN01</option>
-                                <option value="TAR01|Táriba">Táriba - TAR01</option>
-                                <option value="TUN01|Tunja">Tunja - TUN01</option>
-                                <option value="VAL01|Valledupar">Valledupar - VAL01</option>
-                                <option value="VLL01|Villavicencio">Villavicencio - VLL01</option>
-                                <option value="YOP01|Yopal">Yopal - YOP01</option>
-                            </select>
+                            <label>Codigo de Ciudad:</label>
+                            <input type="text" name="cityCode" placeholder='Ingresa el Codigo de Ciudad' value={formData.cityCode} onChange={handleChange} required />
                         </div>
+
+                        <div className="form-row">
+                            <label>Ciudad:</label>
+                            <input type="text" name="cityName" placeholder='Ingresa la Ciudad' value={formData.cityName} onChange={handleChange} required />
+                        </div>
+
                         <button type="submit" className="submit-button">Guardar</button>
                     </form>
                 </div>
