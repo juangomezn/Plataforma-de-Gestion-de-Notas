@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import passport from 'passport'
+import mongoose from 'mongoose'
 import { user } from '../db/users.js'
 import usersDto from '../dtos/users.js'
 import Controller from '../controllers/controller.js'
@@ -11,10 +12,77 @@ import { generateCodeUser } from '../utils/genereateCodeUser.js'
 const userRouter = express.Router()
 const userController = new Controller(user, usersDto)
 
-userRouter.get('/', userController.getAll)
-userRouter.get('/:_id', userController.getById)
+
+userRouter.get('/:_id', async (req, res) => {
+    try {
+        const { _id } = req.params
+
+        const userData = await user.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(_id) }
+            },
+            {
+                $lookup: {
+                    from: 'roles',
+                    localField: 'rol',
+                    foreignField: '_id',
+                    as: 'rol'
+                }
+            },
+            { $unwind: { path: '$rol', preserveNullAndEmptyArrays: true } },
+            {
+                $project: {
+                    firstName: 1,
+                    lastName: 1,
+                    email: 1,
+                    photo: 1,
+                    rol: '$rol.type',
+                    codeUser: 1,
+                    identification: 1,
+                    gender: 1,
+                    birthdate: 1,
+                    address: 1,
+                    city: 1
+                }
+            }
+        ])
+
+        if (!userData.length) {
+            return res.status(404).json({ error: 'Usuario no encontrado' })
+        }
+
+        res.json(userData[0])
+    } catch (err) {
+        res.status(500).json({
+            error: 'Error al obtener el usuario',
+            details: err.message
+        })
+    }
+})
 
 
+const getAllUsers = async () => {
+    const users = await user.aggregate([
+        {
+            $lookup: {
+                from: 'roles',
+                localField: 'rol',
+                foreignField: '_id',
+                as: 'rol'
+            }
+        },
+        { $unwind: '$rol' },
+        {
+            $project: {
+                firstName: 1,
+                lastName: 1,
+                email: 1,
+                rol: '$rol.type'
+            }
+        }
+    ])
+    return users
+}
 userRouter.post('/complete-profile', async (req, res) => {
     try {
         const data = req.body
@@ -23,20 +91,17 @@ userRouter.post('/complete-profile', async (req, res) => {
             return res.status(400).json({ error: 'El campo "email" es obligatorio' })
         }
 
-        // Buscar el usuario existente por email
         const existingUser = await user.findOne({ email: data.email })
 
         if (!existingUser) {
             return res.status(404).json({ error: 'No se encontró un usuario con ese email' })
         }
 
-        // Generar nuevo código de usuario si aún no lo tiene
         const codeUser = existingUser.codeUser || await generateCodeUser(data.rol)
 
-        // Actualizar los datos del perfil
         const updateData = {
             rol: data.rol,
-            codeUser: data.codeUser,
+            codeUser,
             firstName: data.firstName,
             lastName: data.lastName,
             identification: data.identification,
@@ -54,6 +119,14 @@ userRouter.post('/complete-profile', async (req, res) => {
     }
 })
 
+userRouter.get('/', async (req, res) => {
+    try {
+        const users = await getAllUsers()
+        res.json(users)
+    } catch (err) {
+        res.status(500).json({ error: 'Error al obtener los usuarios', details: err.message })
+    }
+})
 
 userRouter.get(
     '/google/callback',
@@ -71,13 +144,19 @@ userRouter.put('/:id', async (req, res) => {
         const updateData = req.body
         const { id } = req.params
 
-        // Generar el codeUser basado en el rol si aún no tiene uno
         const existingUser = await user.findById(id)
         if (!existingUser) {
             return res.status(404).json({ message: 'Usuario no encontrado' })
         }
 
-        // Solo generar si no tiene codeUser aún
+        if (updateData.rol && typeof updateData.rol === 'string') {
+
+            if (!mongoose.Types.ObjectId.isValid(updateData.rol)) {
+                return res.status(400).json({ message: 'El ID de rol no es válido' })
+            }
+            updateData.rol = new mongoose.Types.ObjectId(updateData.rol)
+        }
+
         if (!existingUser.codeUser && updateData.rol) {
             const codeUser = await generateCodeUser(updateData.rol)
             updateData.codeUser = codeUser
@@ -90,6 +169,7 @@ userRouter.put('/:id', async (req, res) => {
         res.status(500).json({ message: 'Error al actualizar el usuario', error: err.message })
     }
 })
+
 
 
 userRouter.delete('/:_id', userController.delete)

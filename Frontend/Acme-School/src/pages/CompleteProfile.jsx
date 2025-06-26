@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './CompleteProfile.css'
 import Navbar from '../components/Navbar'
 
@@ -10,7 +10,7 @@ const ROLES = {
 
 const CompleteProfile = () => {
     const [formData, setFormData] = useState({
-        email:'',
+        email: '',
         rol: '',
         firstName: '',
         lastName: '',
@@ -24,55 +24,73 @@ const CompleteProfile = () => {
         cityName: ''
     })
 
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search)
+        const userId = params.get('userId')
+
+        if (userId) {
+            localStorage.setItem('userId', userId)
+            console.log('✅ userId guardado:', userId)
+
+            fetch(`http://localhost:3000/users/${userId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.email) {
+                        setFormData(prev => ({ ...prev, email: data.email }))
+                    }
+                })
+                .catch(err => console.error('❌ Error obteniendo email:', err))
+        }
+    }, [])
+
     const handleChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     const handleSubmit = async e => {
-        e.preventDefault()
+    e.preventDefault()
 
-        const userData = {
-            rol: formData.rol,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            identification: {
-                type: formData.identificationType,
-                number: formData.identificationNumber
-            },
-            gender: formData.gender,
-            birthdate: formData.birthdate,
-            address: {
-                street: formData.addressStreet,
-                number: formData.addressNumber
-            },
-            city: {
-                code: formData.cityCode,
-                name: formData.cityName
-            }
-        }
-
-        try {
-
-            const params = new URLSearchParams(window.location.search);
-            const userId = params.get('userId');
-
-            const response = await fetch(`http://localhost:3000/users/${userId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
-            })
-
-            const result = await response.json()
-            if (response.ok) {
-                alert('✅ Usuario registrado correctamente')
-            } else {
-                alert('❌ Error: ' + result.details)
-            }
-        } catch (error) {
-            console.error('Error de conexión:', error)
-            alert('Error al conectar con el servidor')
+    const userData = {
+        email: formData.email,
+        rol: formData.rol,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        identification: {
+            type: formData.identificationType,
+            number: formData.identificationNumber
+        },
+        gender: formData.gender,
+        birthdate: formData.birthdate,
+        address: {
+            street: formData.addressStreet,
+            number: formData.addressNumber
+        },
+        city: {
+            code: formData.cityCode,
+            name: formData.cityName
         }
     }
+
+    try {
+        const response = await fetch(`http://localhost:3000/users/complete-profile`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData)
+        })
+
+        const result = await response.json()
+        if (response.ok) {
+    alert('✅ Usuario registrado correctamente')
+    localStorage.setItem('user', JSON.stringify(result.user)) 
+} else {
+            alert('❌ Error: ' + result.details)
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error)
+        alert('Error al conectar con el servidor')
+    }
+}
+
 
     return (
         <div>

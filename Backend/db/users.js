@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema({
     googleId:{
         type: String 
     },
+    photo:{
+        type: String
+    },
     address: {
         street: {
             type: String,

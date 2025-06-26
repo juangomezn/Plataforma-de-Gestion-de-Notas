@@ -14,6 +14,7 @@ passport.use(new GoogleStrategy({
             user = await UserModel.create({
                 googleId: profile.id,
                 email: profile.emails[0].value,
+                photo: profile.photos[0].value,
                 rol: null,
                 codeUser: null,
                 firstName: null,
@@ -25,6 +26,11 @@ passport.use(new GoogleStrategy({
                 city: { code: null, name: null },
                 active: true
             })
+        } else {
+            if (user.photo !== profile.photos[0].value) {
+                user.photo = profile.photos[0].value
+                await user.save()
+            }
         }
 
         done(null, user)

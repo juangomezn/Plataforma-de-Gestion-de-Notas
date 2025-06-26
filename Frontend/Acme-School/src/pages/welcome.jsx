@@ -1,6 +1,6 @@
 import React from 'react'
 import './Welcome.css'
-import Navbar from '../components/Navbar'
+import logo from '../assets/Logo.png'
 
     const handleLogin = () => {
         window.location.href = 'http://localhost:5173/login'
@@ -8,7 +8,10 @@ import Navbar from '../components/Navbar'
 
 const Welcome = () => {
     return (
-        <div>
+        <div className='general-container'>
+            <div className='logo-container'>
+                <img src={logo} alt="Acme School Logo" className="logo-header" />
+            </div>
             <div className="welcome-container">
                 <div className="welcome-content">
                     <h1>Bienvenido a ACME SCHOOL</h1>

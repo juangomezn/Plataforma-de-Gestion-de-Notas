@@ -1,10 +1,20 @@
 import './Navbar.css'
 import logo from '../assets/Logo3.png'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+
+
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false)
+    const [userId, setUserId] = useState(null)
+
+    useEffect(() => {
+        const storedId = localStorage.getItem('userId')
+        if (storedId) {
+            setUserId(storedId)
+        }
+    }, [])
 
     return (
         <nav className="navbar">
@@ -19,7 +29,7 @@ const Navbar = () => {
 
             <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
                 <Link to="/">Inicio</Link>
-                <Link to="/profile">Perfil</Link>
+                {userId && <Link to={`/user-profile?userId=${userId}`}>Perfil</Link>}
                 <Link to="/logout">Salir</Link>
             </div>
         </nav>

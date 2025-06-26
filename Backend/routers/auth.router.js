@@ -10,13 +10,15 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/auth/failure' }),
     (req, res) => {
-        if (!req.user || !req.user._id) {
-            return res.redirect('/auth/failure')
-        }
 
         const userId = req.user._id.toString()
-        // ✅ Redirigir al frontend con el ID
-        res.redirect(`http://localhost:5173/complete-profile?userId=${userId}`)
+
+        // Si el usuario ya completó su perfil (ej. tiene nombre y rol), redirige al perfil
+        if (req.user.firstName && req.user.rol) {
+            res.redirect(`http://localhost:5173/user-profile?userId=${userId}`)
+        } else {
+            res.redirect(`http://localhost:5173/complete-profile?userId=${userId}`)
+        }
     }
 )
 
