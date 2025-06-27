@@ -3,17 +3,14 @@ import passport from 'passport'
 
 const router = express.Router()
 
-// Redirige a Google
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
-// Callback después de Google
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/auth/failure' }),
     (req, res) => {
 
         const userId = req.user._id.toString()
 
-        // Si el usuario ya completó su perfil (ej. tiene nombre y rol), redirige al perfil
         if (req.user.firstName && req.user.rol) {
             res.redirect(`http://localhost:5173/user-profile?userId=${userId}`)
         } else {

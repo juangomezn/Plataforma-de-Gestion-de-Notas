@@ -8,7 +8,6 @@ import { courseValidations } from '../validations/courses.validation.js'
 const courseRouter = express.Router()
 const courseController = new Controller(course, coursesDto)
 
-// GET ALL (resumen)
 courseRouter.get('/', async (req, res) => {
     try {
         const courses = await course.find({}, {
@@ -24,7 +23,6 @@ courseRouter.get('/', async (req, res) => {
     }
 })
 
-// GET BY ID (detalle completo con temas)
 courseRouter.get('/:_id', async (req, res) => {
     try {
         const found = await course.findById(req.params._id)
@@ -35,10 +33,8 @@ courseRouter.get('/:_id', async (req, res) => {
     }
 })
 
-// CREATE
 courseRouter.post('/', courseValidations, courseController.create)
 
-// UPDATE (puedes agregar, actualizar o eliminar temas)
 courseRouter.put('/:_id', async (req, res) => {
     try {
         const { _id } = req.params
@@ -53,7 +49,6 @@ courseRouter.put('/:_id', async (req, res) => {
     }
 })
 
-// DELETE
 courseRouter.delete('/:_id', courseController.delete)
 
 export default courseRouter

@@ -1,11 +1,11 @@
 import PDFDocument from 'pdfkit';
-import { course } from '../../db/courses.js'; // Asegúrate que este sea el nombre correcto
+import { course } from '../../db/courses.js'; 
 
 export const reportCourseTopics = async (req, res) => {
-  const { code } = req.params; // ← usa params si en la ruta es /courses/:code
+  const { code } = req.params;
 
   try {
-    const courses = await course.findOne({ code }); // ← renombrado a "courses"
+    const courses = await course.findOne({ code }); 
 
     if (!courses) return res.status(404).json({ message: 'Curso no encontrado' });
 

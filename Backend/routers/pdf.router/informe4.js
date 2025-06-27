@@ -9,11 +9,9 @@ export const reportStudentGrades = async (req, res) => {
     try {
         const studentObjectId = new mongoose.Types.ObjectId(studentsId);
 
-        // Buscar datos del estudiante
         const studentData = await user.findById(studentObjectId);
         if (!studentData) return res.status(404).json({ message: 'Estudiante no encontrado' });
 
-        // Buscar notas e historial de cursos
         const results = await schedule.aggregate([
             {
                 $match: {
@@ -67,11 +65,9 @@ export const reportStudentGrades = async (req, res) => {
             return res.status(404).json({ message: 'Estudiante no encontrado o sin notas' });
         }
 
-        // Calcular promedio ponderado
         const totalPeso = results.reduce((sum, r) => sum + r.weight, 0);
         const promedioPonderado = results.reduce((sum, r) => sum + (r.score * r.weight), 0) / totalPeso;
 
-        // Generar PDF
         const doc = new PDFDocument({ margin: 50 });
         res.setHeader('Content-Disposition', 'attachment; filename=registro_notas.pdf');
         res.setHeader('Content-Type', 'application/pdf');

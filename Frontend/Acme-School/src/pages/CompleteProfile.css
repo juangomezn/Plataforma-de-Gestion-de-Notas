@@ -2,13 +2,13 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  overflow: hidden; /* Evita scroll en body si usaremos scroll interno */
+  overflow: hidden;
   background-color: #111;
   font-family: 'Segoe UI', sans-serif;
 }
 
 .container {
-  height: calc(100vh - 60px); /* Ajusta si tu Navbar es diferente */
+  height: calc(100vh - 60px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +25,7 @@ html, body {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   font-size: 20px;
-  overflow-y: auto; /* <--- Esto activa el scroll interno */
+  overflow-y: auto;
 }
 
 .form-wrapper h2 {

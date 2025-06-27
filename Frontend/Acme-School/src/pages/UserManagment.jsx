@@ -85,7 +85,7 @@ const UserManagementPage = () => {
                 <h1>Gestión de Usuarios</h1>
                 <p>Aquí puedes ver, editar y eliminar usuarios.</p>
 
-                {/* Tabla de usuarios */}
+
                 <div className="user-management-table">
                     <table>
                         <thead>
@@ -112,7 +112,6 @@ const UserManagementPage = () => {
                     </table>
                 </div>
 
-                {/* Formulario de edición */}
                 {editingUser && (
                     <div className="edit-user-form">
                         <h3>Editar Usuario</h3>
