@@ -83,6 +83,7 @@ const getAllUsers = async () => {
     ])
     return users
 }
+
 userRouter.post('/complete-profile', async (req, res) => {
     try {
         const data = req.body

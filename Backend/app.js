@@ -9,6 +9,7 @@ import bodyParser from 'body-parser'
 import session from 'express-session'
 import authRouter from './routers/auth.router.js'
 import profileRoute from './routers/profile.router.js'
+import pdfsRouter from './routers/pdf.router/index.js'
 import { PORT, HOSTNAME, MONGO_URL } from './utils/secrets.js'
 import { coursesRouter, courseScheduleRouter, rolesRouter, usersRouter } from './routers/index.js'
 
@@ -46,6 +47,7 @@ app.use('/users', usersRouter)
 app.use('/courseSchedule', courseScheduleRouter)
 app.use('/courses', coursesRouter)
 app.use('/roles', rolesRouter)
+app.use('/pdfs', pdfsRouter)
 
 app.listen(PORT, HOSTNAME, () => {
     console.log(`🚀 Server is running on http://${HOSTNAME}:${PORT}`)
