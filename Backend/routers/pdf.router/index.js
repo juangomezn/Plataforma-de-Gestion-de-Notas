@@ -1,8 +1,8 @@
 import express from 'express';
 import { reportCoursesBetweenDates } from '../pdf.router/informe1.js';
 import { reportCourseTopics } from '../pdf.router/informe2.js';
-import { reportCourseDetailByTeacher } from '../pdf.router/Informe3.js';
-import { reportStudentGrades } from '../pdf.router/Informe4.js';
+import { reportCourseDetailByTeacher } from '../pdf.router/informe3.js';
+import { reportStudentGrades } from '../pdf.router/informe4.js';
 
 const router = express.Router();
 

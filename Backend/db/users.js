@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 const userSchema = new mongoose.Schema({
     rol: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'rol',
+        ref: 'roles',
     },
     codeUser: {
         type: String,

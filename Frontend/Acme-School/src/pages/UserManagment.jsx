@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import './UserManagment.css';
+import { apiFetch } from '../api/client';
 
 const UserManagementPage = () => {
     const [users, setUsers] = useState([]);
@@ -14,7 +15,7 @@ const UserManagementPage = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('http://localhost:3000/users');
+            const response = await apiFetch('/users');
             const data = await response.json();
             setUsers(data);
         };
@@ -22,7 +23,7 @@ const UserManagementPage = () => {
     }, []);
 
     const handleDelete = async (userId) => {
-        const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        const response = await apiFetch(`/users/${userId}`, {
             method: 'DELETE',
         });
         if (response.ok) {
@@ -55,9 +56,8 @@ const UserManagementPage = () => {
 
         console.log('ROL A ENVIAR:', formData.rol);
 
-        const response = await fetch(`http://localhost:3000/users/${editingUser._id}`, {
+        const response = await apiFetch(`/users/${editingUser._id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
 

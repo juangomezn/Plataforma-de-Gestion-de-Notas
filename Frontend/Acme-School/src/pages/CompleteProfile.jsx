@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './CompleteProfile.css'
 import Navbar from '../components/Navbar'
+import { apiFetch } from '../api/client'
+import { useAuth } from '../context/AuthContext'
 
 const ROLES = {
     admin: '685741f6742f783de332f842',
@@ -9,6 +12,8 @@ const ROLES = {
 }
 
 const CompleteProfile = () => {
+    const navigate = useNavigate()
+    const { refreshSession } = useAuth()
     const [formData, setFormData] = useState({
         email: '',
         rol: '',
@@ -32,7 +37,7 @@ const CompleteProfile = () => {
             localStorage.setItem('userId', userId)
             console.log('✅ userId guardado:', userId)
 
-            fetch(`http://localhost:3000/users/${userId}`)
+            apiFetch(`/users/${userId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.email) {
@@ -72,17 +77,18 @@ const CompleteProfile = () => {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/users/complete-profile`, {
+        const response = await apiFetch(`/users/complete-profile`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData)
         })
 
         const result = await response.json()
         if (response.ok) {
-    alert('✅ Usuario registrado correctamente')
-    localStorage.setItem('user', JSON.stringify(result.user)) 
-} else {
+            alert('✅ Usuario registrado correctamente')
+            localStorage.setItem('user', JSON.stringify(result.user))
+            await refreshSession()
+            navigate('/user-profile', { replace: true })
+        } else {
             alert('❌ Error: ' + result.details)
         }
     } catch (error) {

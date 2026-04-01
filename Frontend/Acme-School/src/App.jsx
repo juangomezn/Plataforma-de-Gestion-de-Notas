@@ -1,23 +1,53 @@
 import { Routes, Route } from 'react-router-dom'
-import Welcome from './pages/Welcome'
+import Welcome from './pages/welcome'
 import CompleteProfile from './pages/CompleteProfile'
-import Login from './pages/Login'
+import Login from './pages/login'
 import AdminPage from './pages/Adminpage'
 import UserManagement from './pages/UserManagment'
 import UserProfile from './pages/UserProfile'
-//import AdminDashboard from './pages/AdminDashboard'
-//import TeacherDashboard from './pages/TeacherDashboard'
-//import StudentDashboard from './pages/StudentDashboard'
+import Unauthorized from './pages/Unauthorized'
+import Logout from './pages/Logout'
+import { ProtectedRoute, RoleRoute } from './components/ProtectedRoute'
 
 function App() {
   return (
     <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/complete-profile" element={<CompleteProfile />} />
-        <Route path="/admin-page" element={<AdminPage />} />
-        <Route path="/user-management" element={<UserManagement />} />
-        <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route
+          path="/complete-profile"
+          element={
+            <ProtectedRoute>
+              <CompleteProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user-profile"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-page"
+          element={
+            <RoleRoute roles={['admin']}>
+              <AdminPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/user-management"
+          element={
+            <RoleRoute roles={['admin']}>
+              <UserManagement />
+            </RoleRoute>
+          }
+        />
     </Routes>
   )
 }

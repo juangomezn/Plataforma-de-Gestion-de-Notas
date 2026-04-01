@@ -1,29 +1,56 @@
 import React, { useEffect, useState } from 'react'
 import './UserProfile.css'
 import Navbar from '../components/Navbar'
+import { useAuth } from '../context/AuthContext'
+import { apiFetch } from '../api/client'
 
 const UserProfile = () => {
+    const { user: authUser, loading: authLoading } = useAuth()
     const [user, setUser] = useState(null)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
+        if (authLoading) return
+
         const params = new URLSearchParams(window.location.search)
-        const userId = params.get('userId')
+        const userIdParam = params.get('userId')
+        const targetId = userIdParam || authUser?._id
+        if (!targetId) {
+            setError('No se pudo determinar el usuario')
+            return
+        }
 
         const fetchUser = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/users/${userId}`)
+                const response = await apiFetch(`/users/${targetId}`)
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}))
+                    setError(err.error || err.message || 'Error al cargar el perfil')
+                    return
+                }
                 const data = await response.json()
                 setUser(data)
-            } catch (error) {
-                console.error('Error al cargar el perfil:', error)
+                localStorage.setItem('userId', targetId)
+            } catch (e) {
+                console.error('Error al cargar el perfil:', e)
+                setError('Error de conexión')
             }
         }
 
         fetchUser()
-    }, [])
+    }, [authLoading, authUser])
 
-    if (!user) {
+    if (authLoading || (!user && !error)) {
         return <div className="loading">Cargando perfil...</div>
+    }
+
+    if (error) {
+        return (
+            <div>
+                <Navbar />
+                <div className="loading">{error}</div>
+            </div>
+        )
     }
 
     return (

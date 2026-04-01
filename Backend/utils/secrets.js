@@ -14,6 +14,11 @@ const prod = ENVIRONMENT === 'production'
 export const PORT = (process.env.APP_PORT || 3000)
 export const HOSTNAME = (process.env.APP_HOSTNAME || 'localhost')
 
+/** Origen del frontend (CORS + redirects OAuth). En dev con Vite: http://localhost:5173 */
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
+
+export const SESSION_SECRET = process.env.SESSION_SECRET || 'cambiar_en_produccion_SESSION_SECRET'
+
 export const MONGO_URL = prod ?
     process.env.MONGO_URL_PROD :
     process.env.MONGO_URL_LOCAL
@@ -25,7 +30,3 @@ if(!MONGO_URL) {
         console.log('No hay cadena de conexion de desarrollo configurada para la base de datos')
     process.exit(1)
 }
-
-export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-export const COOKIE_KEY = process.env.COOKIE_KEY

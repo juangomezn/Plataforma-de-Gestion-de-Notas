@@ -72,6 +72,26 @@
     color: #000000;
 }
 
+.nav-logout {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.nav-logout:hover {
+    color: #000000;
+}
+
+.nav-hint {
+    opacity: 0.75;
+    font-size: 18px;
+    font-weight: 400;
+}
+
 
 @media (max-width: 768px) {
     .hamburger {
