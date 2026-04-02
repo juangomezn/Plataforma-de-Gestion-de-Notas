@@ -1,14 +1,20 @@
-import express from 'express';
-import { reportCoursesBetweenDates } from '../pdf.router/informe1.js';
-import { reportCourseTopics } from '../pdf.router/informe2.js';
-import { reportCourseDetailByTeacher } from '../pdf.router/informe3.js';
-import { reportStudentGrades } from '../pdf.router/informe4.js';
+import express from 'express'
+import { reportCoursesBetweenDates } from './informe1.js'
+import { reportCourseTopics } from './informe2.js'
+import { reportCourseDetailByTeacher } from './informe3.js'
+import { reportStudentGrades } from './informe4.js'
+import { requireAuth, requireRole, requireStudentGradesAccess } from '../../middleware/auth.middleware.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/courses', reportCoursesBetweenDates);
-router.get('/courses/:code', reportCourseTopics);
-router.get('/courses/:courseId/teacher/:teacherId', reportCourseDetailByTeacher);
-router.get('/students/:studentsId/grades', reportStudentGrades);
+router.get('/courses', requireAuth, requireRole('admin', 'teacher'), reportCoursesBetweenDates)
+router.get('/courses/:code', requireAuth, requireRole('admin', 'teacher'), reportCourseTopics)
+router.get(
+    '/courses/:courseId/teacher/:teacherId',
+    requireAuth,
+    requireRole('admin', 'teacher'),
+    reportCourseDetailByTeacher
+)
+router.get('/students/:studentsId/grades', requireAuth, requireStudentGradesAccess, reportStudentGrades)
 
-export default router;
+export default router
