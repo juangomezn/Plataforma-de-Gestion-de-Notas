@@ -14,9 +14,10 @@ courseRouter.get('/', requireAuth, async (req, res) => {
         const courses = await course.find({}, {
             code: 1,
             description: 1,
-            intensityHours: 1,
+            intensity: 1,
             weight: 1,
-            topics: 1
+            topics: 1,
+            active: 1,
         })
         res.json(courses)
     } catch (error) {

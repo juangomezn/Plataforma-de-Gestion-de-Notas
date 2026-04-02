@@ -34,6 +34,7 @@ const Navbar = () => {
                             <>
                                 <Link to="/admin-page" onClick={() => setMenuOpen(false)}>Panel admin</Link>
                                 <Link to="/user-management" onClick={() => setMenuOpen(false)}>Usuarios</Link>
+                                <Link to="/course-management" onClick={() => setMenuOpen(false)}>Cursos</Link>
                             </>
                         )}
                         {roleType === 'teacher' && (

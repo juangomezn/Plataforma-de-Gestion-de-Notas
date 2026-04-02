@@ -4,6 +4,7 @@ import CompleteProfile from './pages/CompleteProfile'
 import Login from './pages/login'
 import AdminPage from './pages/Adminpage'
 import UserManagement from './pages/UserManagment'
+import CourseManagement from './pages/CourseManagement'
 import UserProfile from './pages/UserProfile'
 import Unauthorized from './pages/Unauthorized'
 import Logout from './pages/Logout'
@@ -45,6 +46,14 @@ function App() {
           element={
             <RoleRoute roles={['admin']}>
               <UserManagement />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/course-management"
+          element={
+            <RoleRoute roles={['admin']}>
+              <CourseManagement />
             </RoleRoute>
           }
         />
