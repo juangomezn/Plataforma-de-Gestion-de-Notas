@@ -4,6 +4,7 @@ import './CompleteProfile.css'
 import Navbar from '../components/Navbar'
 import { apiFetch } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 const ROLES = {
     admin: '685741f6742f783de332f842',
@@ -14,6 +15,7 @@ const ROLES = {
 const CompleteProfile = () => {
     const navigate = useNavigate()
     const { refreshSession } = useAuth()
+    const { showToast } = useToast()
     const [formData, setFormData] = useState({
         email: '',
         rol: '',
@@ -84,16 +86,22 @@ const CompleteProfile = () => {
 
         const result = await response.json()
         if (response.ok) {
-            alert('✅ Usuario registrado correctamente')
+            showToast('Usuario registrado correctamente', { type: 'success' })
             localStorage.setItem('user', JSON.stringify(result.user))
             await refreshSession()
             navigate('/user-profile', { replace: true })
         } else {
-            alert('❌ Error: ' + result.details)
+            const errMsg =
+                result.details ||
+                result.error ||
+                result.message ||
+                (Array.isArray(result.errors) ? result.errors.map((e) => e.msg).join(' ') : null) ||
+                'No se pudo guardar el perfil'
+            showToast(typeof errMsg === 'string' ? errMsg : JSON.stringify(errMsg), { type: 'error' })
         }
     } catch (error) {
         console.error('Error de conexión:', error)
-        alert('Error al conectar con el servidor')
+        showToast('Error al conectar con el servidor', { type: 'error' })
     }
 }
 
