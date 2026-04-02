@@ -1,9 +1,19 @@
+# Variables de entorno (no subir; los .env.example sí se versionan)
+.env
+.env.local
+.env.*.local
+Backend/.env
+Backend/.env.local
+frontend/Acme-School/.env
+frontend/Acme-School/.env.local
+Frontend/.env
+
 Backend/node_modules
 Backend/package-lock.json
-Backend/.env
-
+frontend/Acme-School/node_modules
+frontend/Acme-School/package-lock.json
 Frontend/node_modules
 Frontend/package-lock.json
-Frontend/.env
+frontend/Acme-School/dist
 
 Data
