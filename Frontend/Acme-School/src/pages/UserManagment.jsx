@@ -3,6 +3,26 @@ import Navbar from '../components/Navbar';
 import './UserManagment.css';
 import { apiFetch } from '../api/client';
 
+const ROLE_LABELS = { admin: 'Administrador', teacher: 'Profesor', student: 'Estudiante' }
+const ROLE_IDS = {
+    admin: '685741f6742f783de332f842',
+    teacher: '68589a9fc21e9559fadca98b',
+    student: '68589aa8c21e9559fadca98d',
+}
+
+function formatRole(rol) {
+    if (rol == null || rol === '') return 'Sin rol'
+    if (typeof rol === 'object' && rol?._id != null) return ROLE_LABELS[rol.type] || rol.type || String(rol._id)
+    return ROLE_LABELS[rol] || rol
+}
+
+function roleTypeToSelectValue(rol) {
+    if (rol == null || rol === '') return ''
+    if (typeof rol === 'object' && rol?._id) return rol._id
+    if (typeof rol === 'string' && ROLE_IDS[rol]) return ROLE_IDS[rol]
+    return typeof rol === 'string' ? rol : ''
+}
+
 const UserManagementPage = () => {
     const [users, setUsers] = useState([]);
     const [editingUser, setEditingUser] = useState(null);
@@ -37,7 +57,7 @@ const UserManagementPage = () => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            rol: typeof user.rol === 'object' ? user.rol._id : user.rol
+            rol: roleTypeToSelectValue(user.rol),
         });
     };
 
@@ -101,7 +121,7 @@ const UserManagementPage = () => {
                                 <tr key={user._id}>
                                     <td>{user.firstName} {user.lastName}</td>
                                     <td>{user.email}</td>
-                                    <td>{typeof user.rol === 'object' ? user.rol._id : user.rol}</td>
+                                    <td>{formatRole(user.rol)}</td>
                                     <td>
                                         <button onClick={() => handleEdit(user)}>Editar</button>
                                         <button onClick={() => handleDelete(user._id)}>Eliminar</button>

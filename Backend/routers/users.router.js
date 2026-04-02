@@ -20,15 +20,20 @@ const getAllUsers = async () => {
                 as: 'rol'
             }
         },
-        { $unwind: '$rol' },
+        {
+            $unwind: {
+                path: '$rol',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
         {
             $project: {
                 firstName: 1,
                 lastName: 1,
                 email: 1,
-                rol: '$rol.type'
-            }
-        }
+                rol: '$rol.type',
+            },
+        },
     ])
     return users
 }
