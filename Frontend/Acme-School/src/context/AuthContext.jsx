@@ -36,15 +36,19 @@ export function AuthProvider({ children }) {
         refreshSession()
     }, [refreshSession])
 
+    const clearLocalSession = useCallback(() => {
+        setUser(null)
+        localStorage.removeItem('userId')
+        localStorage.removeItem('user')
+    }, [])
+
     const logout = useCallback(async () => {
         try {
-            await apiFetch('/auth/logout', { method: 'POST' })
+            await apiFetch('/auth/logout', { method: 'POST', skipAuthHandling: true })
         } finally {
-            setUser(null)
-            localStorage.removeItem('userId')
-            localStorage.removeItem('user')
+            clearLocalSession()
         }
-    }, [])
+    }, [clearLocalSession])
 
     const value = useMemo(
         () => ({
@@ -53,8 +57,9 @@ export function AuthProvider({ children }) {
             roleType: user?.roleType ?? null,
             refreshSession,
             logout,
+            clearLocalSession,
         }),
-        [user, loading, refreshSession, logout]
+        [user, loading, refreshSession, logout, clearLocalSession]
     )
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
