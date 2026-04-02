@@ -1,4 +1,7 @@
 import 'dotenv/config'
+import { readFileSync } from 'fs'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 import cors from "cors"
 import express from 'express'
 import mongoose from 'mongoose'
@@ -12,6 +15,9 @@ import profileRoute from './routers/profile.router.js'
 import pdfsRouter from './routers/pdf.router/index.js'
 import { PORT, HOSTNAME, MONGO_URL, FRONTEND_URL, SESSION_SECRET } from './utils/secrets.js'
 import { coursesRouter, courseScheduleRouter, rolesRouter, usersRouter } from './routers/index.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'))
 
 const app = express()
 
@@ -43,7 +49,20 @@ app.use(passport.session())
 mongoose.connect(MONGO_URL).then(() => console.log('✅ Database connected'))
 
 app.get('/', (req, res) => {
-    res.send('Run Server')
+    res.json({
+        service: 'acme-school-api',
+        version: pkg.version,
+        env: process.env.NODE_ENV || 'development',
+    })
+})
+
+app.get('/health', (req, res) => {
+    const dbConnected = mongoose.connection.readyState === 1
+    const payload = {
+        status: dbConnected ? 'ok' : 'degraded',
+        database: dbConnected ? 'connected' : 'disconnected',
+    }
+    res.status(dbConnected ? 200 : 503).json(payload)
 })
 
 app.use('/auth', authRouter)
