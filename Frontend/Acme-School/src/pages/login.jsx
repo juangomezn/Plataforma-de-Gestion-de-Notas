@@ -1,7 +1,7 @@
 import './Login.css'
 import React, { useState } from 'react'
 import logo from '../assets/Logo-Google.png'
-import logoAcme from '../assets/Logo.png'
+import logoAcme from '../assets/logo-colores-texto.png'
 
 const Login = () => {
 

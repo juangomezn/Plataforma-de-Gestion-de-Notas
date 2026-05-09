@@ -5,16 +5,15 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #111;
+  background-color: #e0e0e0;
   font-family: 'Segoe UI', sans-serif;
   overflow-x: hidden;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+html, body {
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 :root {
@@ -22,9 +21,8 @@ body {
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #fffefe;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -44,9 +42,7 @@ a:hover {
 
 body {
   margin: 0;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -88,4 +84,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.main-content {
+  flex: 1;
 }

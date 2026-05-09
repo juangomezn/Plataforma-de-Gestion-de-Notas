@@ -1,6 +1,6 @@
 .login-container {
     height: 100vh;
-    background-color: #111;
+    background-color: #ffffff;
     display: flex;
     align-items: center; 
     justify-content: center;
@@ -9,7 +9,7 @@
 
 
 .login-form {
-    background-color: #1c1c1c;
+    background-color: #001938;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);

@@ -1,5 +1,5 @@
 import './Navbar.css'
-import logo from '../assets/Logo3.png'
+import logo from '../assets/logo-colores.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
@@ -14,42 +14,72 @@ const Navbar = () => {
         navigate('/', { replace: true })
     }
 
+    const getHomeRoute = () => {
+        if (!user) return '/'
+        if (roleType === 'admin') return '/admin-page'
+        if (roleType === 'teacher') return '/teacher-dashboard'
+        if (roleType === 'student') return '/student-dashboard'
+        return '/'
+    }
+
     return (
         <nav className="navbar">
-            <div className="navbar-content">
-                <img src={logo} alt="Acme School Logo" className="logo" />
+
+            {/* IZQUIERDA */}
+            <div className="navbar-left">
+                <img src={logo} alt="logo" className="logo" />
                 <span className="navbar-title">ACME SCHOOL</span>
             </div>
 
-            <button type="button" className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            {/* HAMBURGUESA */}
+            <button
+                className="hamburger"
+                onClick={() => setMenuOpen(!menuOpen)}
+            >
                 ☰
             </button>
 
-            <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
-                <Link to="/" onClick={() => setMenuOpen(false)}>Inicio</Link>
+            {/* DERECHA */}
+            <div className={`navbar-right ${menuOpen ? 'active' : ''}`}>
+
+                <div className="nav-links">
+
+                    <Link to={getHomeRoute()} onClick={() => setMenuOpen(false)}>
+                        Inicio
+                    </Link>
+
+                    {user && (
+                        <Link to="/user-profile" onClick={() => setMenuOpen(false)}>
+                            Perfil
+                        </Link>
+                    )}
+
+                </div>
+
                 {user && (
-                    <>
-                        <Link to="/user-profile" onClick={() => setMenuOpen(false)}>Perfil</Link>
-                        {roleType === 'admin' && (
-                            <>
-                                <Link to="/admin-page" onClick={() => setMenuOpen(false)}>Panel admin</Link>
-                                <Link to="/user-management" onClick={() => setMenuOpen(false)}>Usuarios</Link>
-                                <Link to="/course-management" onClick={() => setMenuOpen(false)}>Cursos</Link>
-                            </>
-                        )}
-                        {roleType === 'teacher' && (
-                            <span className="nav-hint">Área docente (próximamente)</span>
-                        )}
-                        {roleType === 'student' && (
-                            <span className="nav-hint">Mis cursos (próximamente)</span>
-                        )}
-                        <button type="button" className="nav-logout" onClick={() => { setMenuOpen(false); handleLogout() }}>
-                            Salir
-                        </button>
-                    </>
+                    <div className="nav-user">
+
+                    <div className="user-info">
+                        <span className="user-name">
+                            {user.firstName}
+                        </span>
+                
+                        <span className={`role-badge ${roleType}`}>
+                            {roleType}
+                        </span>
+                    </div>
+                
+                    <button onClick={() => { setMenuOpen(false); handleLogout() }}>
+                        Salir
+                    </button>
+                
+                </div>
                 )}
+
                 {!user && (
-                    <Link to="/login" onClick={() => setMenuOpen(false)}>Iniciar sesión</Link>
+                    <Link to="/login" className="login-btn">
+                        Iniciar sesión
+                    </Link>
                 )}
             </div>
         </nav>

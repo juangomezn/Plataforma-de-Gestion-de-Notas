@@ -38,12 +38,12 @@ const AdminPage = () => {
                     <div className="admin-option-card">
                         <h3>Inscripciones</h3>
                         <p>Inscribe estudiantes a los cursos y gestiona su progreso.</p>
-                        <button type="button" disabled>Próximamente</button>
+                        <Link to="/enrollments"><button>Acceder</button></Link>
                     </div>
                     <div className="admin-option-card">
                         <h3>Reportes</h3>
                         <p>Genera y consulta reportes de los cursos y estudiantes.</p>
-                        <button type="button" disabled>Próximamente</button>
+                        <Link to="/reports"><button>Acceder</button></Link>
                     </div>
                 </div>
 

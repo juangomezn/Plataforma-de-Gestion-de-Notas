@@ -5,9 +5,11 @@ import Login from './pages/login'
 import AdminPage from './pages/Adminpage'
 import UserManagement from './pages/UserManagment'
 import CourseManagement from './pages/CourseManagement'
+import EnrollmentPage from './pages/EnrollmentPage'
 import UserProfile from './pages/UserProfile'
 import Unauthorized from './pages/Unauthorized'
 import Logout from './pages/Logout'
+import ReportsPage from './pages/ReportsPage'
 import { ProtectedRoute, RoleRoute } from './components/ProtectedRoute'
 
 function App() {
@@ -56,6 +58,16 @@ function App() {
               <CourseManagement />
             </RoleRoute>
           }
+        />
+        <Route path="/enrollments" 
+          element={
+            <EnrollmentPage />
+          } 
+        />
+        <Route path="/reports" 
+          element={
+            <ReportsPage />
+          } 
         />
     </Routes>
   )

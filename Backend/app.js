@@ -14,7 +14,7 @@ import authRouter from './routers/auth.router.js'
 import profileRoute from './routers/profile.router.js'
 import pdfsRouter from './routers/pdf.router/index.js'
 import { PORT, HOSTNAME, MONGO_URL, FRONTEND_URL, SESSION_SECRET } from './utils/secrets.js'
-import { coursesRouter, courseScheduleRouter, rolesRouter, usersRouter } from './routers/index.js'
+import { coursesRouter, courseScheduleRouter, rolesRouter, usersRouter, enrollmentRouter } from './routers/index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'))
@@ -71,6 +71,7 @@ app.use('/users', usersRouter)
 app.use('/courseSchedule', courseScheduleRouter)
 app.use('/courses', coursesRouter)
 app.use('/roles', rolesRouter)
+app.use('/enrollments', enrollmentRouter)
 app.use('/pdfs', pdfsRouter)
 
 app.listen(PORT, HOSTNAME, () => {

@@ -1,7 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh; 
   overflow: hidden;
   background-color: #111;
   font-family: 'Segoe UI', sans-serif;
@@ -56,8 +56,8 @@ select {
   padding: 10px;
   border-radius: 5px;
   border: none;
-  background-color: #2a2a2a;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   font-size: 16px;
 }
 

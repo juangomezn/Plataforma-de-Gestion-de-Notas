@@ -1,7 +1,7 @@
 .welcome-container {
     overflow-x: hidden;
     padding: 40px 20px;;
-    background-color: #111;
+    background-color: #e0e0e0;
     color: #fff;
     display: flex;
     justify-content: center;
@@ -10,7 +10,7 @@
 }
 
 .welcome-content {
-    background-color: #313131;
+    background-color: #00152e;
     padding: 50px 40px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);

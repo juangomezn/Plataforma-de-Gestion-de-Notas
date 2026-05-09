@@ -1,0 +1,63 @@
+.reports-page {
+    min-height: 100vh;
+    background: #f4f7fb;
+}
+
+.reports-content {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+}
+
+.reports-content h1 {
+    text-align: center;
+    color: #064f84;
+    margin-bottom: 30px;
+}
+
+/* CARD */
+.report-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.report-card h3 {
+    margin-bottom: 15px;
+}
+
+/* FILTROS */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filters input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* BOTÓN */
+.report-card button {
+    background: #064f84;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.report-card button:hover {
+    background: #04345a;
+}
+
+/* LOADING */
+.loading {
+    text-align: center;
+    margin-top: 20px;
+    color: #555;
+}

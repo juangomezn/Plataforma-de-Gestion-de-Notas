@@ -1,6 +1,6 @@
 import React from 'react'
 import './Welcome.css'
-import logo from '../assets/Logo.png'
+import logo from '../assets/logo-colores-texto.png'
 
     const handleLogin = () => {
         window.location.href = 'http://localhost:5173/login'
